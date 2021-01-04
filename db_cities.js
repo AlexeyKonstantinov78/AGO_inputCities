@@ -44,7 +44,7 @@ const data = {
         },
         {
             "country": "Германия",
-            "count": 82175684 ,
+            "count": 82175684,
             "cities": [
                 {
                     "name": "Берлин",
@@ -141,7 +141,7 @@ const data = {
         },
         {
             "country": "Germany",
-            "count": 82175684 ,
+            "count": 82175684,
             "cities": [
                 {
                     "name": "Berlin",
@@ -238,7 +238,7 @@ const data = {
         },
         {
             "country": "Deutschland",
-            "count": 82175684 ,
+            "count": 82175684,
             "cities": [
                 {
                     "name": "Berlin",
@@ -291,3 +291,4 @@ const data = {
         }
     ]
 };
+
