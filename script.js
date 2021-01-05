@@ -205,7 +205,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target.closest('.dropdown-lists__total-line') && target.closest('.dropdown-lists__list--select')) {
             dataDbSites('.dropdown-lists__list--default', 3);
             closeDefault();
-            inputSelectCities.value = '';
+        }
+
+        if (target.closest('.dropdown-lists__line') && target.closest('.dropdown-lists__list--select')) {
+            document.querySelector('.dropdown-lists__list--select').style.display = '';
         }
 
         if (target.matches('.dropdown-lists__city') || target.matches('.dropdown-lists__country')) {
