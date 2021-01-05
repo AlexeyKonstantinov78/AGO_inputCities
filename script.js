@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputSelectCities = document.getElementById('select-cities'),
         closeButton = document.querySelector('.close-button'),
         button = document.querySelector('.button'),
+        label = document.querySelector('.label'),
         dropdownLists = document.querySelector('.dropdown-lists'),
         arr = [];
+
+    inputSelectCities.value = '';
 
     //получил данные.
     // const dbSites = () => {
@@ -131,14 +134,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectfilter.length !== 0) {
             arr.forEach((item) => {
                 let itemSpisok = item.citiseName.trim().toLowerCase();
-                //console.log(itemSpisok.substring(0, selectfilter.length));
-                if (selectfilter === itemSpisok.substring(0, selectfilter.length)) {
 
+                if (selectfilter === itemSpisok.substring(0, selectfilter.length)) {
                     arrFilter.push(item);
-                } else {
-                    divCountryBlock.textContent = 'Ничего не найдено';
                 }
             });
+        }
+
+        if (arrFilter.length === 0) {
+            divCountryBlock.textContent = 'Ничего не найдено';
         }
 
         arrFilter.forEach((item) => {
@@ -153,14 +157,41 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.dropdown-lists__list--autocomplete').append(block);
     };
 
-    // добавление по событию  
-    inputSelectCities.addEventListener('click', (event) => {
-        event.preventDefault();
-        inputSelectCities.value = '';
-        dataDbSites('.dropdown-lists__list--default', 3);
+    // подстановка значений в инпут и ссылка
+    const inputValue = (item) => {
+        inputSelectCities.value = item.textContent;
+
+        label.textContent = '';
+        closeButton.style.display = 'block';
+
+        if (item.matches('.dropdown-lists__city')) {
+            arr.forEach((key) => {
+                if (key.citiseName === item.textContent) {
+                    button.setAttribute('href', '#');
+                    button.href = key.citiseLink;
+                    button.setAttribute('target', "_blank");
+                }
+            });
+        }
+    };
+
+    // сброс 
+    const closeDefault = () => {
+        closeButton.style.display = '';
         document.querySelector('.dropdown-lists__list--default').style.display = '';
         document.querySelector('.dropdown-lists__list--autocomplete').style.display = '';
         document.querySelector('.dropdown-lists__list--select').style.display = '';
+        inputSelectCities.value = '';
+        label.textContent = 'Страна или город';
+        button.removeAttribute('href');
+        button.removeAttribute('target');
+    };
+
+    // добавление по событию  
+    inputSelectCities.addEventListener('click', (event) => {
+        event.preventDefault();
+        dataDbSites('.dropdown-lists__list--default', 3);
+        closeDefault();
     });
 
     dropdownLists.addEventListener('click', (event) => {
@@ -169,14 +200,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.dropdown-lists__list--default').style.display = 'none';
             dataDbSites('.dropdown-lists__list--select', 0, target.textContent);
             document.querySelector('.dropdown-lists__list--select').style.display = 'inline';
-            closeButton.style.display = 'block';
         }
+
         if (target.matches('.dropdown-lists__country') && target.closest('.dropdown-lists__list--select')) {
-            document.querySelector('.dropdown-lists__list--select').style.display = '';
-            document.querySelector('.dropdown-lists__list--default').style.display = '';
             dataDbSites('.dropdown-lists__list--default', 3);
-            closeButton.style.display = '';
+            closeDefault();
+            inputSelectCities.value = '';
         }
+
+        if (target.matches('.dropdown-lists__city') || target.matches('.dropdown-lists__country')) {
+            inputValue(target);
+        }
+
     });
 
     inputSelectCities.addEventListener('input', () => {
@@ -188,11 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeButton.addEventListener('click', () => {
-        closeButton.style.display = '';
-        dataDbSites('.dropdown-lists__list--default', 3);
-        document.querySelector('.dropdown-lists__list--default').style.display = '';
-        document.querySelector('.dropdown-lists__list--autocomplete').style.display = '';
-        document.querySelector('.dropdown-lists__list--select').style.display = '';
+        if (document.querySelector('.dropdown-lists__col') !== null) {
+            document.querySelectorAll('.dropdown-lists__col').forEach((item) => {
+                item.remove();
+            });
+        }
+        closeDefault();
     });
 
 });
